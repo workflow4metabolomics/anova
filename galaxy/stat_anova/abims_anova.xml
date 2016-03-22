@@ -3,7 +3,8 @@
     <description>N-way anova. With ou Without interactions</description>
     
     <requirements>
-        <requirement type="binary">Rscript</requirement>
+        <requirement type="package" version="3.1.2">R</requirement>
+	<requirement type="binary">Rscript</requirement>
     </requirements>
 
     <stdio>
