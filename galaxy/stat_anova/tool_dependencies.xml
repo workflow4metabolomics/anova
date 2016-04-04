@@ -2,6 +2,8 @@
 <tool_dependency>
     <package name="R" version="3.1.2">
         <repository name="package_r_3_1_2" owner="iuc" />
+    </package>
+    <package name="batch" version="1.1-4">
 	<repository name="package_r_batch_1_1_4" owner="lecorguille" />
     </package>
 </tool_dependency>
