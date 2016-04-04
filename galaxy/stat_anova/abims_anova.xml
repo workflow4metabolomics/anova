@@ -1,4 +1,4 @@
-<tool id="abims_anova" name="Anova" version="1.1.3">
+<tool id="abims_anova" name="Anova" version="1.1.4">
     
     <description>N-way anova. With ou Without interactions</description>
     
