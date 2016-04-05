@@ -11,7 +11,7 @@ Changelog/News
 Test Status
 -----------
 
-```
+```bash
 planemo conda_init
 planemo conda_install .
 
