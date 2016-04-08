@@ -11,4 +11,6 @@ Changelog/News
 Test Status
 -----------
 
-planemo test: passed
+Planemo test using conda: passed
+
+Planemo shed_test: passed
