@@ -15,6 +15,7 @@ language: python
 before_install:
  - sudo apt-get install -y python-virtualenv
  - virtualenv planemo-venv
+ - pip install planemo
  - . planemo-venv/bin/activate
  - planemo conda_init
 
