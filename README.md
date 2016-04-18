@@ -1,6 +1,7 @@
 Anova for Galaxy
 =================
 
+[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io) [![travis-badge](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/builds)
 
 Our project
 -----------
