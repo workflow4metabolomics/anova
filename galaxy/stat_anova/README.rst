@@ -11,12 +11,6 @@ Changelog/News
 Test Status
 -----------
 
-```bash
-planemo conda_init
-planemo conda_install .
+Planemo test using conda: passed
 
-planemo test --install_galaxy --conda_dependency_resolution .
-
-#All 1 test(s) executed passed.
-#abims_anova[0]: passed
-```
+Planemo shed_test: passed

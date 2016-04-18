@@ -1,6 +1,7 @@
 Anova for Galaxy
 =================
 
+[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io) [![travis-badge](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/builds)
 
 Our project
 -----------
@@ -25,6 +26,13 @@ Conda
 -----
 [![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io)
 
+[Conda](http://conda.pydata.org/) is package manager that among many other things can be used to manage Python packages.
+
+Travis
+------
+[![travis-badge](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/builds)
+
+Test and Deploy with Confidence. Easily sync your GitHub projects with Travis CI and you'll be testing your code in minutes!
 
 Historic contributors
 ---------------------
