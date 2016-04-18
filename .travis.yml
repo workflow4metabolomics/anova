@@ -10,7 +10,16 @@
 # We need Python 2.6 or 2.7 to run Galaxy but many Galaxy tools also need Java
 # to run the simplest way to get that installed is to just start with "java".
 # (which will still have a system python installed).
-language: java
+language: python
+
+before_install:
+ - sudo apt-get install -y python-virtualenv
+ - virtualenv planemo-venv
+ - . planemo-venv/bin/activate
+ - planemo conda_init
+
+install:
+ - planemo conda_install ${TRAVIS_BUILD_DIR}/galaxy/stat_anova/
 
 script:
- - wget -O- https://raw.github.com/galaxyproject/planemo/master/scripts/travis_test.sh | /bin/bash -x
+ - planemo test --install_galaxy --no_cache_galaxy --conda_dependency_resolution ${TRAVIS_BUILD_DIR} 
