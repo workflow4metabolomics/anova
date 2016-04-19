@@ -1,7 +1,7 @@
 Anova for Galaxy
 =================
 
-[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io) [![travis-badge](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/builds)
+[![bioconda-badge](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg?style=flat-square)](http://bioconda.github.io) [![Build Status](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/anova)
 
 Our project
 -----------
@@ -30,7 +30,7 @@ Conda
 
 Travis
 ------
-[![travis-badge](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/builds)
+[![Build Status](https://travis-ci.org/workflow4metabolomics/anova.svg?branch=master)](https://travis-ci.org/workflow4metabolomics/anova)
 
 Test and Deploy with Confidence. Easily sync your GitHub projects with Travis CI and you'll be testing your code in minutes!
 
