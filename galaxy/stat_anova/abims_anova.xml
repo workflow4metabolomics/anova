@@ -3,7 +3,6 @@
     <description>N-way anova. With ou Without interactions</description>
     
     <requirements>
-        <requirement type="package" version="3.1.2">R</requirement>
 	<requirement type="package" version="1.1_4">r-batch</requirement>
     </requirements>
 
