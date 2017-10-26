@@ -10,14 +10,21 @@
         <exit_code range="1:" level="fatal" />
     </stdio>
 
-    <command interpreter="Rscript">
-abims_anova.r file "$input" sampleinfo "$sampleinfo" mode "$mode" 
+    <command>
+Rscript $__tool_directory__/abims_anova.r file '$input' sampleinfo '$sampleinfo' mode '$mode' 
 condition "c('$condition_1'
 #for $i, $s in enumerate( $conditions )
 ,'${s.condition}'
 #end for
 )"
-interaction $interaction method $method threshold $threshold selection_method $selection_method sep "$sep" dec "$dec" outputdatapvalue $dataMatrixPValue outputdatafiltered $dataMatrixFiltered
+interaction $interaction 
+method $method 
+threshold $threshold 
+selection_method $selection_method 
+sep '$sep' 
+dec '$dec' 
+outputdatapvalue '$dataMatrixPValue' 
+outputdatafiltered '$dataMatrixFiltered'
     </command> 
 
     <inputs>
@@ -37,7 +44,7 @@ interaction $interaction method $method threshold $threshold selection_method $s
 
         <param name="interaction" type="boolean" label="Enable interaction response p-values" truevalue="T" falsevalue="F" help="Used if more than 1 conditon. The anova will produse p-value according to the interaction between your condition (ex: condition1:conditions2, condition1:conditions3, condition2:conditions3 and condition1:condition2:conditions3)" />
             
-        <param name="method" type="select" help="Method used to apply a correction on the pvalue because of the number of test" format="text" optional="true">
+        <param name="method" type="select" help="Method used to apply a correction on the pvalue because of the number of test" >
             <label>PValue adjusted method</label>
             <option value="BH">BH</option>
             <option value="holm">holm</option>
@@ -51,7 +58,7 @@ interaction $interaction method $method threshold $threshold selection_method $s
         
         <param name="threshold" type="float" label="Threshold" value="0.01" help="max adjusted p.value accepted" />
 
-        <param name="selection_method" type="select" format="text" help="Intersection: all condition p-value must be under the threshold. Union: at least condition p-value must be under the threshold. ">
+        <param name="selection_method" type="select" help="Intersection: all condition p-value must be under the threshold. Union: at least condition p-value must be under the threshold. ">
             <label>Selection method</label>
             <option value="intersection" selected="true">intersection / strong</option>
             <option value="union">union / weak</option>
@@ -146,6 +153,7 @@ Output files
 .. class:: infomark 
 
 The outputs ***.anova_filtered.tabular** or ***.anova_pvalue.tabular** are tabular files. You can continue your analysis using it in the following tools:
+
     | PCA
     | Hierarchical Clustering
 
@@ -224,8 +232,6 @@ Position in workflow4metabo
 +---------------------------+----------------------------------------+--------+------------------------+
 | Name                      | Output file                            | Format | parameter              |   
 +===========================+========================================+========+========================+
-|xcms.diffreport            |xset.diffreport.data_matrix.tsv         | Tabular| Data table file        |   
-+---------------------------+----------------------------------------+--------+------------------------+
 |CAMERA.annotateDiffreport  |xset.annotatediffreport.data_matrix.tsv | Tabular| Data table file        |   
 +---------------------------+----------------------------------------+--------+------------------------+
 |xcms.xcmsSet               |sample_info.tab                         | Tabular| sample info table file |
@@ -250,7 +256,14 @@ Position in workflow4metabo
     </help>
 
     <citations>
-        <citation>Ronald A. Fisher in the 1930s</citation>
+        <citation type="bibtex">@ARTICLE{fisher,
+           author = {Ronald A. Fisher},
+           title = {The Correlation between Relatives on the Supposition of Mendelian Inheritance},
+           journal = {Philosophical Transactions of the Royal Society of Edinburgh},
+           year = {1918},
+           volume = {52},
+           pages = {399-433}
+        }</citation>
     </citations>
 
 </tool>
