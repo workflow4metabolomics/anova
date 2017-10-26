@@ -3,3 +3,4 @@ description: Anova 1 way Filtering on ajusted p.values
 homepage_url: http://workflow4metabolomics.org
 name: anova
 owner: lecorguille
+remote_repository_url: https://github.com/workflow4metabolomics/anova
