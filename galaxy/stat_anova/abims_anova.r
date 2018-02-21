@@ -87,7 +87,7 @@ anova = function (file, sampleinfo, mode="column", condition=1, interaction=F, m
 	if(length(condition) == 1) {
 		aovAdjPValue = t(p.adjust(aovPValue,method=method))
 	} else {
-		aovAdjPValue = apply(aovPValue,2,p.adjust, method=method)
+		aovAdjPValue = t(apply(aovPValue,1,p.adjust, method=method))
 	}
 	rownames(aovAdjPValue) = paste("pvalueadjusted.",method,".",manovaRownames,sep="")
 	

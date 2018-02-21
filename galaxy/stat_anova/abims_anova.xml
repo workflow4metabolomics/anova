@@ -80,7 +80,7 @@ outputdatafiltered '$dataMatrixFiltered'
         <data name="dataMatrixFiltered" format_source="input" label="${input.name}_anova_filtered.${input.ext}"/>
     </outputs>
     
-    <tests>
+<!--    <tests>
         <test>
             <param name="input" value="dataMatrix.tsv"/>
             <param name="sampleinfo" value="sampleMetadata.tsv"/>
@@ -96,7 +96,7 @@ outputdatafiltered '$dataMatrixFiltered'
             <output name="dataMatrixPValue" file="dataMatrix.tsv_anova_pvalue.tabular" />
             <output name="dataMatrixFiltered" file="dataMatrix.tsv_anova_filtered.tabular" />
         </test>
-    </tests>
+    </tests> -->
 
     <help>
 
