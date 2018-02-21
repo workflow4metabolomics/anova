@@ -112,6 +112,16 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	#data=rbind(data, aovPValue, aovAdjPValue)
 	varinfoTab=cbind(varinfoTab, t(aovAdjPValue))
 
+	# group means
+	for (i in 1:length(condition)) {
+		for(j in levels(grps[[i]])){
+			subgp = rownames(sampleinfoTab[which(sampleinfoTab[,condition[i]]==j),])
+			modmean = colMeans(data[which(rownames(data)%in%subgp),])
+			varinfoTab=cbind(varinfoTab, modmean)
+			colnames(varinfoTab)[ncol(varinfoTab)] = paste0("Mean_",condition[i],".",j)
+		}
+	}
+	colnames(varinfoTab) <- make.unique(colnames(varinfoTab))
 	
 	if (mode == "row") {
 	  data=t(data)

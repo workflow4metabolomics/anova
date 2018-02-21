@@ -143,7 +143,7 @@ Output files
 
 ***.anova_pvalue.tabular**
 
-    | Your variable metadata file completed with columns of p-values.
+    | Your variable metadata file completed with columns of p-values and means of subgroups.
 
 ***.anova_filtered.tabular**
 
