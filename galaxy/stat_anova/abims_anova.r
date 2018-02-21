@@ -11,7 +11,7 @@ library(batch)
 
 
 # function avova
-anova = function (file, sampleinfo, mode="column", condition=1, interaction=F, method="BH", threshold=0.01, selection_method="intersection", sep=";", dec=".", outputdatapvalue="anova.data.output", outputdatafiltered="anova.datafiltered.output") {
+anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interaction=F, method="BH", threshold=0.01, selection_method="intersection", sep=";", dec=".", outputdatapvalue="anova.data.output", outputdatafiltered="anova.datafiltered.output") {
 	
  
 	if (sep=="tabulation") sep="\t"
@@ -22,13 +22,23 @@ anova = function (file, sampleinfo, mode="column", condition=1, interaction=F, m
 	if (interaction) anova_formula_operator = "*"
   
   	# -- import --
-	data=read.table(file, header = TRUE, row.names=1, sep = sep, quote="\"", dec = dec, fill = TRUE, comment.char="",na.strings = "NA")
+	data=read.table(file, header = TRUE, row.names=1, sep = sep, quote="\"", dec = dec, fill = TRUE, comment.char="",na.strings = "NA", check.names=FALSE)
 	
   	if (mode == "row") data=t(data)
 	
 	sampleinfoTab=read.table(sampleinfo, header = TRUE, row.names=1, sep = sep, quote="\"")
 	rownames(sampleinfoTab) = make.names(rownames(sampleinfoTab))
-
+	
+	varinfoTab=read.table(varinfo, header = TRUE, sep = sep, quote="\"")
+	if(sum(colnames(data)!=varinfoTab[,1])!=0){ # if ID not exactly identical
+		if(sum(colnames(data)[order(colnames(data))]!=varinfoTab[order(varinfoTab[,1]),1])==0){
+			# reorder data matrix to match variable metadata order
+			data = data[,match(varinfoTab[,1],colnames(data))]
+		}else{
+			stop(paste0("\nVariables' ID do not match between your data matrix and your variable",
+			"metadata file. \nPlease check your data."))
+		}
+	}
 	
 	# -- group --
 	match_data_sampleinfoTab = match(rownames(data),rownames(sampleinfoTab))
@@ -100,7 +110,7 @@ anova = function (file, sampleinfo, mode="column", condition=1, interaction=F, m
 	}
 	
 	#data=rbind(data, aovPValue, aovAdjPValue)
-	data=rbind(data, aovAdjPValue)
+	varinfoTab=cbind(varinfoTab, t(aovAdjPValue))
 
 	
 	if (mode == "row") {
@@ -109,7 +119,7 @@ anova = function (file, sampleinfo, mode="column", condition=1, interaction=F, m
 	}
 	
 	# -- output / return --
-	write.table(data, outputdatapvalue, sep=sep, quote=F, col.names = NA)
+	write.table(varinfoTab, outputdatapvalue, sep=sep, quote=F, col.names = NA)
 	write.table(datafiltered, outputdatafiltered, sep=sep, quote=F, col.names = NA)
 	
 	# log 

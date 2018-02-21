@@ -11,7 +11,7 @@
     </stdio>
 
     <command>
-Rscript $__tool_directory__/abims_anova.r file '$input' sampleinfo '$sampleinfo' mode '$mode' 
+Rscript $__tool_directory__/abims_anova.r file '$input' sampleinfo '$sampleinfo' varinfo '$varinfo' mode '$mode' 
 condition "c('$condition_1'
 #for $i, $s in enumerate( $conditions )
 ,'${s.condition}'
@@ -23,14 +23,15 @@ threshold $threshold
 selection_method $selection_method 
 sep '$sep' 
 dec '$dec' 
-outputdatapvalue '$dataMatrixPValue' 
+outputdatapvalue '$varMetaPValue' 
 outputdatafiltered '$dataMatrixFiltered'
     </command> 
 
     <inputs>
         <param name="input" type="data" label="Data Matrix file" format="tabular" help="Matrix of numeric data with headers." />
         <param name="sampleinfo" type="data" label="Sample Metadata file" format="tabular" help="Tabular file with the data metadata : one sample per line and at least two columns : ids and one condition" />
-        
+        <param name="varinfo" type="data" label="Variable Metadata file" format="tabular" help="Tabular file with information about your tested variables. Only used to aggregate generated information." />
+		
         <param name="mode" type="select" help="Perform the anova tests on column/row" format="text" optional="true">
             <label>Mode</label>
             <option value="row">row</option>
@@ -76,7 +77,7 @@ outputdatafiltered '$dataMatrixFiltered'
     </inputs>
 
     <outputs>
-        <data name="dataMatrixPValue" format_source="input" label="${input.name}_anova_pvalue.${input.ext}"/>
+        <data name="varMetaPValue" format_source="input" label="${varinfo.name}_anova_pvalue.${input.ext}"/>
         <data name="dataMatrixFiltered" format_source="input" label="${input.name}_anova_filtered.${input.ext}"/>
     </outputs>
     
@@ -123,14 +124,15 @@ in which the observed variance in a particular variable is partitioned into comp
 Input files
 -----------
 
-+---------------------------+------------+
-| Parameter : num + label   |   Format   |
-+===========================+============+
-| 1 : Data Matrix file      | Tabular    |
-+---------------------------+------------+
-| 2 : Sample Metadata file  | Tabular    |
-+---------------------------+------------+
-
++----------------------------+------------+
+| Parameter : num + label    |   Format   |
++============================+============+
+| 1 : Data Matrix file       | Tabular    |
++----------------------------+------------+
+| 2 : Sample Metadata file   | Tabular    |
++----------------------------+------------+
+| 3 : Variable Metadata file | Tabular    |
++----------------------------+------------+
 
 
 ------------
@@ -141,7 +143,7 @@ Output files
 
 ***.anova_pvalue.tabular**
 
-    | A tabular file which represents for each metabolite (row), the value of the intensity in each sample (column) + two columns (aovPValue and aovAdjPValue).
+    | Your variable metadata file completed with columns of p-values.
 
 ***.anova_filtered.tabular**
 
