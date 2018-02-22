@@ -142,12 +142,21 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	}
 	dev.off()
 	
+	# summary for significant variables
+	cat("\n\n- - - - - - - number of significant variables - - - - - - -\n\n")
+	for(i in 1:nrow(aovAdjPValue)){
+		cat(rownames(aovAdjPValue)[i],"-",
+		    sum(aovAdjPValue[i,]<=threshold),"significant variable(s)\n")
+	}
+	cat("\nIf some of your factors are missing here, this may be due to\neffects",
+	    "not estimable; your design may not be balanced enough.\n")
+	
 	# -- output / return --
 	write.table(varinfoTab, outputdatapvalue, sep=sep, quote=F, row.names=FALSE)
 	
 	# log 
 	cat("\nthreshold:",threshold,"\n")
-	cat("result:",ncol(datafiltered),"/",ncol(data),"\n")
+	cat("result:",ncol(datafiltered),"/",ncol(data),"\n\n")
   
 	quit("no",status=0)
 }
