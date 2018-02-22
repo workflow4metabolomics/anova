@@ -125,6 +125,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	
 	# pdf for significant variables
 	pdf(outputdatasignif)
+	### Venn diagram
 	if(nrow(aovAdjPValue)>5){
 		pie(100,labels=NA,main=paste0("Venn diagram only available for maximum 5 terms\n",
 		    "(your analysis concerns ",nrow(aovAdjPValue)," terms)\n\n",
@@ -138,7 +139,21 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 			vennlist[[rownames(aovAdjPValue)[i]]]=colnames(aovAdjPValue[i,which(aovAdjPValue[i,]<=threshold),drop=FALSE])
 		}
 		if(length(vennlist)==0){ pie(100,labels=NA,main="No significant ions was found.")
-		}else{ library(venn) ; venn(vennlist, zcolor = "style",cexil = 2, cexsn = 1.5) }
+		}else{ library(venn) ; venn(vennlist, zcolor="style", cexil=2, cexsn=1.5) }
+	}
+	### Boxplot
+	par(mfrow=c(2,2),mai=rep(0.5,4))
+	data <- as.data.frame(data)
+	for(i in 1:nrow(aovAdjPValue)){
+		factmain = gsub(paste0("pval.",method,"."),"",rownames(aovAdjPValue)[i])
+		factsignif = aovAdjPValue[i,which(aovAdjPValue[i,]<=threshold),drop=FALSE]
+		if((ncol(factsignif)!=0)&(factmain%in%colnames(sampleinfoTab))){
+			for(j in 1:ncol(factsignif)){
+				varsignif = gsub(" Response ","",colnames(factsignif)[j])
+				boxplot(as.formula(paste0("data$",varsignif," ~ sampleinfoTab$",factmain)),
+				        main=paste0(factmain,"\n",varsignif), col="grey", mai=7)
+			}
+		}
 	}
 	dev.off()
 	
