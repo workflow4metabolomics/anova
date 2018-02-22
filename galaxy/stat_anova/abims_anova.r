@@ -11,7 +11,7 @@ library(batch)
 
 
 # function avova
-anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interaction=F, method="BH", threshold=0.01, selection_method="intersection", sep=";", dec=".", outputdatapvalue="anova.data.output", outputdatafiltered="anova.datafiltered.output") {
+anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interaction=F, method="BH", threshold=0.01, selection_method="intersection", sep=";", dec=".", outputdatapvalue="anova.data.output", outputdatasignif="anova.datasignif.output") {
 	
  
 	if (sep=="tabulation") sep="\t"
@@ -99,7 +99,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	} else {
 		aovAdjPValue = t(apply(aovPValue,1,p.adjust, method=method))
 	}
-	rownames(aovAdjPValue) = paste("pvalueadjusted.",method,".",manovaRownames,sep="")
+	rownames(aovAdjPValue) = paste("pval.",method,".",manovaRownames,sep="")
 	
 	# selection
 	colSumThreshold = colSums(aovAdjPValue <= threshold)
@@ -121,20 +121,33 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 			colnames(varinfoTab)[ncol(varinfoTab)] = paste0("Mean_",condition[i],".",j)
 		}
 	}
-	colnames(varinfoTab) <- make.unique(colnames(varinfoTab))
+	colnames(varinfoTab) = make.unique(colnames(varinfoTab))
 	
-	if (mode == "row") {
-	  data=t(data)
-	  datafiltered=t(datafiltered)
+	# pdf for significant variables
+	pdf(outputdatasignif)
+	if(nrow(aovAdjPValue)>5){
+		pie(100,labels=NA,main=paste0("Venn diagram only available for maximum 5 terms\n",
+		    "(your analysis concerns ",nrow(aovAdjPValue)," terms)\n\n",
+			"Number of significant variables relatively to\nyour chosen threshold and ",
+			"selection method: ",ncol(datafiltered)),cex.main=0.8)
+	}else{
+		vennlist = list(NULL)
+		names(vennlist) = rownames(aovAdjPValue)[1]
+		if(length(colnames(aovAdjPValue))==0){colnames(aovAdjPValue)=varinfoTab[,1]}
+		for(i in 1:nrow(aovAdjPValue)){
+			vennlist[[rownames(aovAdjPValue)[i]]]=colnames(aovAdjPValue[i,which(aovAdjPValue[i,]<=threshold),drop=FALSE])
+		}
+		if(length(vennlist)==0){ pie(100,labels=NA,main="No significant ions was found.")
+		}else{ library(venn) ; venn(vennlist, zcolor = "style",cexil = 2, cexsn = 1.5) }
 	}
+	dev.off()
 	
 	# -- output / return --
-	write.table(varinfoTab, outputdatapvalue, sep=sep, quote=F, col.names = NA)
-	write.table(datafiltered, outputdatafiltered, sep=sep, quote=F, col.names = NA)
+	write.table(varinfoTab, outputdatapvalue, sep=sep, quote=F, row.names=FALSE)
 	
 	# log 
 	cat("\nthreshold:",threshold,"\n")
-	cat("result:",nrow(datafiltered),"/",nrow(data),"\n")
+	cat("result:",ncol(datafiltered),"/",ncol(data),"\n")
   
 	quit("no",status=0)
 }

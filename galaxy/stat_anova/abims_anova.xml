@@ -24,7 +24,7 @@ selection_method $selection_method
 sep '$sep' 
 dec '$dec' 
 outputdatapvalue '$varMetaPValue' 
-outputdatafiltered '$dataMatrixFiltered'
+outputdatasignif '$dataSignif'
     </command> 
 
     <inputs>
@@ -77,8 +77,8 @@ outputdatafiltered '$dataMatrixFiltered'
     </inputs>
 
     <outputs>
-        <data name="varMetaPValue" format_source="input" label="${varinfo.name}_anova_pvalue.${input.ext}"/>
-        <data name="dataMatrixFiltered" format_source="input" label="${input.name}_anova_filtered.${input.ext}"/>
+        <data name="varMetaPValue" format_source="varinfo" label="${varinfo.name}_anova_pvalue.${varinfo.ext}"/>
+        <data name="dataSignif" format="pdf" label="${input.name}_anova_signif"/>
     </outputs>
     
 <!--    <tests>
@@ -145,18 +145,18 @@ Output files
 
     | Your variable metadata file completed with columns of p-values and means of subgroups.
 
-***.anova_filtered.tabular**
+***.anova_signif.pdf**
 
-    | The tabular file xset.anova_pvalue.tabular containing only the metabolites that have been filtered by aovAdjPValue.
+    | A pdf file containing a Venn diagram for number of significant variables.
     
     
 ------
 
 .. class:: infomark 
 
-The outputs ***.anova_filtered.tabular** or ***.anova_pvalue.tabular** are tabular files. You can continue your analysis using it in the following tools:
+The outputs ***.anova_filtered.tabular** is a tabular file. You can continue your analysis using it in the following tools:
 
-    | PCA
+    | Generic_filter
     | Hierarchical Clustering
 
     
