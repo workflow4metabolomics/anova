@@ -1,4 +1,4 @@
-<tool id="abims_anova" name="Anova" version="1.1.4">
+<tool id="abims_anova" name="Anova" version="1.2.0">
     
     <description>N-way anova. With ou Without interactions</description>
     
@@ -33,9 +33,9 @@ outputdatasignif '$dataSignif'
         <param name="sampleinfo" type="data" label="Sample Metadata file" format="tabular" help="Tabular file with the data metadata : one sample per line and at least two columns : ids and one condition" />
         <param name="varinfo" type="data" label="Variable Metadata file" format="tabular" help="Tabular file with information about your tested variables. Only used to aggregate generated information." />
 		
-        <param name="mode" type="select" help="Perform the anova tests on column/row" format="text" optional="true">
+        <param name="mode" type="select" help="Perform the anova tests on column/row; for W4M 3-tables format, use 'row'." format="text" optional="true">
             <label>Mode</label>
-            <option value="row">row</option>
+            <option value="row" selected="True">row</option>
             <option value="column">column</option>
         </param>
     
@@ -55,7 +55,7 @@ outputdatasignif '$dataSignif'
             <option value="hommel">hommel</option>
             <option value="BY">BY</option>
             <option value="fdr">fdr</option>
-            <option value="none">none</option>		
+            <option value="none" selected="True">none</option>		
         </param>        
         
         <param name="threshold" type="float" label="Threshold" value="0.01" help="max adjusted p.value accepted" />
