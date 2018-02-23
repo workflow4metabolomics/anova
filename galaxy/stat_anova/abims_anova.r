@@ -104,19 +104,21 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	# selection
 	colSumThreshold = colSums(aovAdjPValue <= threshold)
 	if (selection_method == "intersection") {
-		datafiltered = data[,colSumThreshold == nrow(aovAdjPValue )]
+		datafiltered = data[,colSumThreshold == nrow(aovAdjPValue ), drop=FALSE]
 	} else {
-		datafiltered = data[,colSumThreshold != 0]
+		datafiltered = data[,colSumThreshold != 0, drop=FALSE]
 	}
+	selected.var = rep("no",ncol(data))
+	selected.var[colnames(data)%in%colnames(datafiltered)] = "yes"
 	
 	#data=rbind(data, aovPValue, aovAdjPValue)
-	varinfoTab=cbind(varinfoTab, t(aovAdjPValue))
+	varinfoTab=cbind(varinfoTab, t(aovAdjPValue), selected.var)
 
 	# group means
 	for (i in 1:length(condition)) {
 		for(j in levels(grps[[i]])){
 			subgp = rownames(sampleinfoTab[which(sampleinfoTab[,condition[i]]==j),])
-			modmean = colMeans(data[which(rownames(data)%in%subgp),])
+			modmean = colMeans(data[which(rownames(data)%in%subgp),],na.rm=TRUE)
 			varinfoTab=cbind(varinfoTab, modmean)
 			colnames(varinfoTab)[ncol(varinfoTab)] = paste0("Mean_",condition[i],".",j)
 		}

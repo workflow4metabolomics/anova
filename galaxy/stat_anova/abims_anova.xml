@@ -143,11 +143,11 @@ Output files
 
 ***.anova_pvalue.tabular**
 
-    | Your variable metadata file completed with columns of p-values and means of subgroups.
+    | Your variable metadata file completed with columns of p-values, result of selection method and means of subgroups.
 
 ***.anova_signif.pdf**
 
-    | A pdf file containing a Venn diagram for number of significant variables.
+    | A pdf file containing a Venn diagram and boxplots of significant variables.
     
     
 ------
