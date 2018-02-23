@@ -4,6 +4,7 @@
     
     <requirements>
 	<requirement type="package" version="1.1_4">r-batch</requirement>
+	<requirement type="package" version="1.2">r-venn</requirement>
     </requirements>
 
     <stdio>
@@ -81,10 +82,11 @@ outputdatasignif '$dataSignif'
         <data name="dataSignif" format="pdf" label="${input.name}_anova_signif"/>
     </outputs>
     
-<!--    <tests>
+    <tests>
         <test>
             <param name="input" value="dataMatrix.tsv"/>
             <param name="sampleinfo" value="sampleMetadata.tsv"/>
+			<param name="varinfo" value="variableMetadata.tsv"/>
             <param name="mode" value="row"/>
             <param name="condition_1" value="age"/>
             <param name="conditions_0|condition" value="gender"/>
@@ -94,10 +96,10 @@ outputdatasignif '$dataSignif'
             <param name="selection_method" value="union"/>
             <param name="sep" value="tabulation"/>
             <param name="dev" value="."/>
-            <output name="dataMatrixPValue" file="dataMatrix.tsv_anova_pvalue.tabular" />
-            <output name="dataMatrixFiltered" file="dataMatrix.tsv_anova_filtered.tabular" />
+            <output name="varMetaPValue" file="variableMetadata.tsv_anova_pvalue.tabular" />
+            <output name="dataSignif" file="dataMatrix.tsv_anova_signif.pdf" />
         </test>
-    </tests> -->
+    </tests> 
 
     <help>
 
