@@ -3,7 +3,7 @@
 
 # date: 06-06-2012
 # update: 18-02-2014
-# **Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr 
+# **Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr
 
 # abims_anova.r version 20140218
 
@@ -12,23 +12,23 @@ library(batch)
 
 # function avova
 anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interaction=F, method="BH", threshold=0.01, selection_method="intersection", sep=";", dec=".", outputdatapvalue="anova.data.output", outputdatasignif="anova.datasignif.output") {
-	
- 
+
+
 	if (sep=="tabulation") sep="\t"
     	if (sep=="semicolon") sep=";"
     	if (sep=="comma") sep=","
 
 	anova_formula_operator = "+"
 	if (interaction) anova_formula_operator = "*"
-  
+
   	# -- import --
 	data=read.table(file, header = TRUE, row.names=1, sep = sep, quote="\"", dec = dec, fill = TRUE, comment.char="",na.strings = "NA", check.names=FALSE)
-	
+
   	if (mode == "row") data=t(data)
-	
+
 	sampleinfoTab=read.table(sampleinfo, header = TRUE, row.names=1, sep = sep, quote="\"")
 	rownames(sampleinfoTab) = make.names(rownames(sampleinfoTab))
-	
+
 	varinfoTab=read.table(varinfo, header = TRUE, sep = sep, quote="\"")
 	if(sum(colnames(data)!=varinfoTab[,1])!=0){ # if ID not exactly identical
 		if(sum(colnames(data)[order(colnames(data))]!=varinfoTab[order(varinfoTab[,1]),1])==0){
@@ -39,7 +39,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 			"metadata file. \nPlease check your data."))
 		}
 	}
-	
+
 	# -- group --
 	match_data_sampleinfoTab = match(rownames(data),rownames(sampleinfoTab))
 	if (sum(is.na(match_data_sampleinfoTab)) > 0) {
@@ -51,10 +51,10 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	  write(head(rownames(sampleinfoTab)), stderr())
 	  quit("no",status=10)
 	}
-  
-	
+
+
 	# -- anova --
-  
+
   	# formula
 	grps=list()
 	anova_formula_s = "data ~ "
@@ -70,16 +70,16 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	anova_formula = as.formula(anova_formula_s)
 
 
-	
+
 	# anova
 	manovaObjectList = manova(anova_formula)
 	manovaList = summary.aov(manovaObjectList)
-	
+
   	# condition renaming
 	manovaRownames = gsub(" ","",rownames(manovaList[[1]]))
 	manovaNbrPvalue = length(manovaRownames)-1
 	manovaRownames = manovaRownames[-(manovaNbrPvalue+1)]
-	
+
 	for (i in 1:length(condition)) {
 	  manovaRownames = sub(paste("grps\\[\\[",i,"\\]\\]",sep=""),condition[i],manovaRownames)
   	  anova_formula_s = sub(paste("grps\\[\\[",i,"\\]\\]",sep=""),condition[i],anova_formula_s)
@@ -87,12 +87,12 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 
   	# log
   	cat("\nanova_formula",anova_formula_s,"\n")
-	
+
 	# p-value
 	aovPValue = sapply(manovaList,function(x){x[-(manovaNbrPvalue+1),5]})
 	if(length(condition) == 1) aovPValue = t(aovPValue)
 	rownames(aovPValue) = paste("pvalue_",manovaRownames,sep="")
-  
+
 	# p-value adjusted
 	if(length(condition) == 1) {
 		aovAdjPValue = t(p.adjust(aovPValue,method=method))
@@ -100,7 +100,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 		aovAdjPValue = t(apply(aovPValue,1,p.adjust, method=method))
 	}
 	rownames(aovAdjPValue) = paste("pval.",method,".",manovaRownames,sep="")
-	
+
 	# selection
 	colSumThreshold = colSums(aovAdjPValue <= threshold)
 	if (selection_method == "intersection") {
@@ -110,9 +110,9 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	}
 	selected.var = rep("no",ncol(data))
 	selected.var[colnames(data)%in%colnames(datafiltered)] = "yes"
-	
+
 	#data=rbind(data, aovPValue, aovAdjPValue)
-	varinfoTab=cbind(varinfoTab, t(aovAdjPValue), selected.var)
+	varinfoTab=cbind(varinfoTab, round(t(aovAdjPValue),10), selected.var)
 
 	# group means
 	for (i in 1:length(condition)) {
@@ -124,7 +124,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 		}
 	}
 	colnames(varinfoTab) = make.unique(colnames(varinfoTab))
-	
+
 	# pdf for significant variables
 	pdf(outputdatasignif)
 	### Venn diagram
@@ -158,7 +158,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 		}
 	}
 	dev.off()
-	
+
 	# summary for significant variables
 	cat("\n\n- - - - - - - number of significant variables - - - - - - -\n\n")
 	for(i in 1:nrow(aovAdjPValue)){
@@ -167,14 +167,14 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
 	}
 	cat("\nIf some of your factors are missing here, this may be due to\neffects",
 	    "not estimable; your design may not be balanced enough.\n")
-	
+
 	# -- output / return --
 	write.table(varinfoTab, outputdatapvalue, sep=sep, quote=F, row.names=FALSE)
-	
-	# log 
+
+	# log
 	cat("\nthreshold:",threshold,"\n")
 	cat("result:",ncol(datafiltered),"/",ncol(data),"\n\n")
-  
+
 	quit("no",status=0)
 }
 
@@ -186,6 +186,3 @@ print(args)
 
 listArguments = parseCommandArgs(evaluate=FALSE)
 do.call(anova, listArguments)
-
-
-
