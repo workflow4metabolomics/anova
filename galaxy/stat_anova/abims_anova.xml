@@ -106,6 +106,7 @@ outputdatasignif '$dataSignif'
 .. class:: infomark
 
 **Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr
+Melanie Petera - PFEM ; INRA ; MetaboHUB
 
 ---------------------------------------------------
 
@@ -165,97 +166,7 @@ The outputs ***.anova_filtered.tabular** is a tabular file. You can continue you
 
 ---------------------------------------------------
 
----------------
-Working example
----------------
 
-
-Input files
------------
-
-**>A part of an example of Data Matrix file input**
-
-
-+--------+------------------+----------------+
-| Name   | Bur-eH_FSP_12    | Bur-eH_FSP_24  |
-+========+==================+================+
-|M202T601| 91206595.7559783 |106808979.08546 |
-+--------+------------------+----------------+
-|M234T851| 27249137.275504  |28824971.3177926|
-+--------+------------------+----------------+
-
-**>A part of an example of Sample Metadata file input**
-
-
-+---------------------------+------------+------------+------------+
-| Sample name               |   class    |   time     |   batch    |
-+===========================+============+============+============+
-| Bur-eH_FSP_12             | Bur-eH     |    12      |     1      |
-+---------------------------+------------+------------+------------+
-| Bur-eH_FSP_24             | Bur-eH     |    24      |     1      |
-+---------------------------+------------+------------+------------+
-| Bur-NI_FSP_12             | Bur-NI     |    12      |     2      |
-+---------------------------+------------+------------+------------+
-| Bur-NI_FSP_24             | Bur-NI     |    24      |     2      |
-+---------------------------+------------+------------+------------+
-
-Parameters
-----------
-
-    | Mode -> **row**
-    | column name of condition -> **class**
-    | Separator of columns: -> **tabulation**
-    | Decimal separator -> **.**
-    | PValue adjusted method -> **BH**
-    | Threshold -> **0.001**
-
-
-
-Output files
-------------
-
-**Part of an example of xset.anova_filtered.tabular:**
-
-.. image:: anova_pvalue.png
-
-**Part of an example of xset.anova_pvalue.tabular:**
-
-.. image:: anova_filtered.png
-
-
----------------------------------------------------
-
-
----------------------------
-Position in workflow4metabo
----------------------------
-
-
-**Upstream tools**
-
-+---------------------------+----------------------------------------+--------+------------------------+
-| Name                      | Output file                            | Format | parameter              |
-+===========================+========================================+========+========================+
-|CAMERA.annotateDiffreport  |xset.annotatediffreport.data_matrix.tsv | Tabular| Data table file        |
-+---------------------------+----------------------------------------+--------+------------------------+
-|xcms.xcmsSet               |sample_info.tab                         | Tabular| sample info table file |
-+---------------------------+----------------------------------------+--------+------------------------+
-
-
-**Downstream tools**
-
-+---------------------------+---------------------------------------------------------+--------+
-| Name                      | Output file                                             | Format |
-+===========================+=========================================================+========+
-|PCA                        |xset.anova_pvalue.tabular OR xset.anova_filtered.tabular | Tabular|
-+---------------------------+---------------------------------------------------------+--------+
-|Hierarchical Clustering    |xset.anova_pvalue.tabular OR xset.anova_filtered.tabular | Tabular|
-+---------------------------+---------------------------------------------------------+--------+
-
-
-**General schema of the metabolomic workflow**
-
-.. image:: anova_workflow.png
 
     </help>
 

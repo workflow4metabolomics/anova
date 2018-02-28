@@ -1,5 +1,5 @@
 categories: [Statistics]
-description: Anova 1 way Filtering on ajusted p.values
+description: N-way anova. With ou Without interactions
 homepage_url: http://workflow4metabolomics.org
 name: anova
 owner: lecorguille
