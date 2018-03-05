@@ -24,7 +24,7 @@ anova = function (file, sampleinfo, varinfo, mode="column", condition=1, interac
   	# -- import --
 	data=read.table(file, header = TRUE, row.names=1, sep = sep, quote="\"", dec = dec, fill = TRUE, comment.char="",na.strings = "NA", check.names=FALSE)
 
-  	if (mode == "row") data=t(data)
+  	if (mode == "row") {data=t(data)} else {data=as.matrix(data)}
 
 	sampleinfoTab=read.table(sampleinfo, header = TRUE, row.names=1, sep = sep, quote="\"")
 	rownames(sampleinfoTab) = make.names(rownames(sampleinfoTab))
