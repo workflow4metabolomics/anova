@@ -1,9 +1,10 @@
-<tool id="abims_anova" name="Anova" version="1.1.4">
-    
+<tool id="abims_anova" name="Anova" version="1.2.1">
+
     <description>N-way anova. With ou Without interactions</description>
-    
+
     <requirements>
 	<requirement type="package" version="1.1_4">r-batch</requirement>
+	<requirement type="package" version="1.2">r-venn</requirement>
     </requirements>
 
     <stdio>
@@ -11,39 +12,40 @@
     </stdio>
 
     <command>
-Rscript $__tool_directory__/abims_anova.r file '$input' sampleinfo '$sampleinfo' mode '$mode' 
+Rscript $__tool_directory__/abims_anova.r file '$input' sampleinfo '$sampleinfo' varinfo '$varinfo' mode '$mode'
 condition "c('$condition_1'
 #for $i, $s in enumerate( $conditions )
 ,'${s.condition}'
 #end for
 )"
-interaction $interaction 
-method $method 
-threshold $threshold 
-selection_method $selection_method 
-sep '$sep' 
-dec '$dec' 
-outputdatapvalue '$dataMatrixPValue' 
-outputdatafiltered '$dataMatrixFiltered'
-    </command> 
+interaction $interaction
+method $method
+threshold $threshold
+selection_method $selection_method
+sep '$sep'
+dec '$dec'
+outputdatapvalue '$varMetaPValue'
+outputdatasignif '$dataSignif'
+    </command>
 
     <inputs>
-        <param name="input" type="data" label="Data Matrix file" format="tabular" help="Matrix of numeric data with headers." />
+        <param name="input" type="data" label="Data Matrix file" format="tabular,csv" help="Matrix of numeric data with headers." />
         <param name="sampleinfo" type="data" label="Sample Metadata file" format="tabular" help="Tabular file with the data metadata : one sample per line and at least two columns : ids and one condition" />
-        
-        <param name="mode" type="select" help="Perform the anova tests on column/row" format="text" optional="true">
+        <param name="varinfo" type="data" label="Variable Metadata file" format="tabular" help="Tabular file with information about your tested variables. Only used to aggregate generated information." />
+
+        <param name="mode" type="select" help="Perform the anova tests on column/row; for W4M 3-tables format, use 'row'." format="text" optional="true">
             <label>Mode</label>
-            <option value="row">row</option>
+            <option value="row" selected="True">row</option>
             <option value="column">column</option>
         </param>
-    
+
         <param name="condition_1" type="text" label="Condition" value="" help="The column name of the condition. ex: hour or treatment" optional="false" />
         <repeat name="conditions" title="Conditions for N-ways anova">
             <param name="condition" type="text" label="Condition" value="" help="The column name of the condition. ex: hour or treatment" />
         </repeat>
 
         <param name="interaction" type="boolean" label="Enable interaction response p-values" truevalue="T" falsevalue="F" help="Used if more than 1 conditon. The anova will produse p-value according to the interaction between your condition (ex: condition1:conditions2, condition1:conditions3, condition2:conditions3 and condition1:condition2:conditions3)" />
-            
+
         <param name="method" type="select" help="Method used to apply a correction on the pvalue because of the number of test" >
             <label>PValue adjusted method</label>
             <option value="BH">BH</option>
@@ -53,9 +55,9 @@ outputdatafiltered '$dataMatrixFiltered'
             <option value="hommel">hommel</option>
             <option value="BY">BY</option>
             <option value="fdr">fdr</option>
-            <option value="none">none</option>		
-        </param>        
-        
+            <option value="none" selected="True">none</option>
+        </param>
+
         <param name="threshold" type="float" label="Threshold" value="0.01" help="max adjusted p.value accepted" />
 
         <param name="selection_method" type="select" help="Intersection: all condition p-value must be under the threshold. Union: at least condition p-value must be under the threshold. ">
@@ -70,20 +72,21 @@ outputdatafiltered '$dataMatrixFiltered'
             <option value="semicolon">;</option>
             <option value="comma">,</option>
         </param>
-        
+
         <param name="dec" type="text" label="Decimal separator" value="." help="" />
 
     </inputs>
 
     <outputs>
-        <data name="dataMatrixPValue" format_source="input" label="${input.name}_anova_pvalue.${input.ext}"/>
-        <data name="dataMatrixFiltered" format_source="input" label="${input.name}_anova_filtered.${input.ext}"/>
+        <data name="varMetaPValue" format_source="varinfo" label="${varinfo.name}_anova_pvalue.${varinfo.ext}"/>
+        <data name="dataSignif" format="pdf" label="${input.name}_anova_signif"/>
     </outputs>
-    
+
     <tests>
         <test>
             <param name="input" value="dataMatrix.tsv"/>
             <param name="sampleinfo" value="sampleMetadata.tsv"/>
+            <param name="varinfo" value="variableMetadata.tsv"/>
             <param name="mode" value="row"/>
             <param name="condition_1" value="age"/>
             <param name="conditions_0|condition" value="gender"/>
@@ -93,8 +96,8 @@ outputdatafiltered '$dataMatrixFiltered'
             <param name="selection_method" value="union"/>
             <param name="sep" value="tabulation"/>
             <param name="dev" value="."/>
-            <output name="dataMatrixPValue" file="dataMatrix.tsv_anova_pvalue.tabular" />
-            <output name="dataMatrixFiltered" file="dataMatrix.tsv_anova_filtered.tabular" />
+            <output name="varMetaPValue" file="variableMetadata.tsv_anova_pvalue.tabular" />
+            <output name="dataSignif" file="dataMatrix.tsv_anova_signif.pdf" compare="sim_size" delta="600" />
         </test>
     </tests>
 
@@ -102,7 +105,8 @@ outputdatafiltered '$dataMatrixFiltered'
 
 .. class:: infomark
 
-**Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr 
+**Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr
+Melanie Petera - PFEM ; INRA ; MetaboHUB
 
 ---------------------------------------------------
 
@@ -117,20 +121,26 @@ Description
 Analysis of variance (ANOVA) is used to analyze the differences between group means and their associated procedures,
 in which the observed variance in a particular variable is partitioned into components attributable to different sources of variation.
 
+**Note about sum of squares (SS) calculation of N-way ANOVA in this module.**
+This module use R function *manova()* (and thus R function *aov()*) to establish N-way ANOVA. 
+Therefore calculated sum of squares are sequential ones (sometimes called "Type I SS"). 
+If your design is unbalanced, this may not correspond to the type of hypothesis being of interest. 
+Note that you can obtain adjusted sums of squares ("Type II SS") by running several times this module with different orders in factors. 
 
 
 -----------
 Input files
 -----------
 
-+---------------------------+------------+
-| Parameter : num + label   |   Format   |
-+===========================+============+
-| 1 : Data Matrix file      | Tabular    |
-+---------------------------+------------+
-| 2 : Sample Metadata file  | Tabular    |
-+---------------------------+------------+
-
++----------------------------+------------+
+| Parameter : num + label    |   Format   |
++============================+============+
+| 1 : Data Matrix file       | Tabular    |
++----------------------------+------------+
+| 2 : Sample Metadata file   | Tabular    |
++----------------------------+------------+
+| 3 : Variable Metadata file | Tabular    |
++----------------------------+------------+
 
 
 ------------
@@ -141,117 +151,27 @@ Output files
 
 ***.anova_pvalue.tabular**
 
-    | A tabular file which represents for each metabolite (row), the value of the intensity in each sample (column) + two columns (aovPValue and aovAdjPValue).
+    | Your variable metadata file completed with columns of p-values, result of selection method and means of subgroups.
 
-***.anova_filtered.tabular**
+***.anova_signif.pdf**
 
-    | The tabular file xset.anova_pvalue.tabular containing only the metabolites that have been filtered by aovAdjPValue.
-    
-    
+    | A pdf file containing a Venn diagram and boxplots of significant variables.
+
+
 ------
 
-.. class:: infomark 
+.. class:: infomark
 
-The outputs ***.anova_filtered.tabular** or ***.anova_pvalue.tabular** are tabular files. You can continue your analysis using it in the following tools:
+The outputs ***.anova_filtered.tabular** is a tabular file. You can continue your analysis using it in the following tools:
 
-    | PCA
+    | Generic_filter
     | Hierarchical Clustering
 
-    
-    
----------------------------------------------------
-
----------------
-Working example
----------------
-
-
-Input files
------------
-
-**>A part of an example of Data Matrix file input**
-    
-
-+--------+------------------+----------------+
-| Name   | Bur-eH_FSP_12    | Bur-eH_FSP_24  |	                                       
-+========+==================+================+
-|M202T601| 91206595.7559783 |106808979.08546 |
-+--------+------------------+----------------+
-|M234T851| 27249137.275504  |28824971.3177926|  
-+--------+------------------+----------------+       
-
-**>A part of an example of Sample Metadata file input**
-    
-    
-+---------------------------+------------+------------+------------+
-| Sample name               |   class    |   time     |   batch    |
-+===========================+============+============+============+
-| Bur-eH_FSP_12             | Bur-eH     |    12      |     1      |
-+---------------------------+------------+------------+------------+
-| Bur-eH_FSP_24             | Bur-eH     |    24      |     1      |
-+---------------------------+------------+------------+------------+
-| Bur-NI_FSP_12             | Bur-NI     |    12      |     2      |
-+---------------------------+------------+------------+------------+
-| Bur-NI_FSP_24             | Bur-NI     |    24      |     2      |
-+---------------------------+------------+------------+------------+
-
-Parameters
-----------
-
-    | Mode -> **row**
-    | column name of condition -> **class**
-    | Separator of columns: -> **tabulation**
-    | Decimal separator -> **.**
-    | PValue adjusted method -> **BH**
-    | Threshold -> **0.001**
-    
-
-
-Output files
-------------
-
-**Part of an example of xset.anova_filtered.tabular:**
-
-.. image:: anova_pvalue.png
-
-**Part of an example of xset.anova_pvalue.tabular:**
-
-.. image:: anova_filtered.png
 
 
 ---------------------------------------------------
 
-    
----------------------------
-Position in workflow4metabo
----------------------------
 
-
-**Upstream tools**
-
-+---------------------------+----------------------------------------+--------+------------------------+
-| Name                      | Output file                            | Format | parameter              |   
-+===========================+========================================+========+========================+
-|CAMERA.annotateDiffreport  |xset.annotatediffreport.data_matrix.tsv | Tabular| Data table file        |   
-+---------------------------+----------------------------------------+--------+------------------------+
-|xcms.xcmsSet               |sample_info.tab                         | Tabular| sample info table file |
-+---------------------------+----------------------------------------+--------+------------------------+
-
-
-**Downstream tools**
-
-+---------------------------+---------------------------------------------------------+--------+
-| Name                      | Output file                                             | Format | 
-+===========================+=========================================================+========+
-|PCA                        |xset.anova_pvalue.tabular OR xset.anova_filtered.tabular | Tabular|
-+---------------------------+---------------------------------------------------------+--------+
-|Hierarchical Clustering    |xset.anova_pvalue.tabular OR xset.anova_filtered.tabular | Tabular|
-+---------------------------+---------------------------------------------------------+--------+
-
-
-**General schema of the metabolomic workflow**
-
-.. image:: anova_workflow.png
 
     </help>
 
