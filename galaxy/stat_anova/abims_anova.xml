@@ -1,9 +1,8 @@
-<tool id="abims_anova" name="Anova" version="1.2.1">
+<tool id="abims_anova" name="Anova" version="1.2.2">
 
     <description>N-way anova. With ou Without interactions</description>
 
     <requirements>
-	<requirement type="package" version="1.1_4">r-batch</requirement>
 	<requirement type="package" version="1.2">r-venn</requirement>
     </requirements>
 
@@ -187,3 +186,12 @@ The outputs ***.anova_filtered.tabular** is a tabular file. You can continue you
     </citations>
 
 </tool>
+
+--------------
+Changelog/News
+--------------
+
+**Version 1.2.2 - September 2022**
+
+- NEW FEATURE: The tool does not rely on the batch package anymore to parse its command line.
+
