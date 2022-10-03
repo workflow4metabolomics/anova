@@ -1,13 +1,24 @@
 #!/usr/local/public/bin/Rscript
-# version="1.1"
+# version="1.1.1"
 
 # date: 06-06-2012
-# update: 18-02-2014
+# update: 22-09-2022
 # **Authors** Gildas Le Corguille  ABiMS - UPMC/CNRS - Station Biologique de Roscoff - gildas.lecorguille|at|sb-roscoff.fr
 
 # abims_anova.r version 20140218
 
-library(batch)
+parse_args <- function() {
+  args <- commandArgs()
+  start <- which(args == "--args")[1] + 1
+  if (is.na(start)) {
+	return(list())
+  }
+  seq_by2 <- seq(start, length(args), by = 2)
+  result <- as.list(args[seq_by2 + 1])
+  names(result) <- args[seq_by2]
+  return(result)
+}
+
 
 
 # function avova
@@ -184,5 +195,5 @@ cat("Arguments\n")
 args <- commandArgs(trailingOnly = TRUE)
 print(args)
 
-listArguments = parseCommandArgs(evaluate=FALSE)
+listArguments = parse_args()
 do.call(anova, listArguments)
